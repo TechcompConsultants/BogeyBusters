@@ -1,0 +1,30 @@
+CLEAR
+SET ECHO OFF
+SET TALK OFF
+
+SELECT a
+USE players
+SELECT b
+USE scores
+COPY STRUCTURE EXTENDED TO temp02
+USE temp02
+APPEND BLANK
+REPLACE field_name WITH 'Player'field_type WITH 'C',field_len WITH 025
+CREATE temp01 FROM temp02
+USE temp01
+
+SELECT a 
+GOTO TOP
+  DO WHILE .NOT. EOF( )
+  SELECT b
+  APPEND BLANK
+  REPLACE code WITH a->code
+  REPLACE player WITH TRIM(a->fname)+' '+a->lname
+  SELECT a
+  SKIP
+  ENDDO
+
+SELECT b
+SET FIELD TO player,score
+GOTO TOP
+DO FORM eScore
